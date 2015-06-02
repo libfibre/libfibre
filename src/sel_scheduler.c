@@ -10,7 +10,7 @@ struct vd {
 
 static void ss_destroy(void *__vd)
 {
-	struct vd *vd = __vd;
+	FUNUSED struct vd *vd = __vd;
 	FCHECK(!vd->current);
 }
 

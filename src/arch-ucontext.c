@@ -35,6 +35,6 @@ void fibre_arch_destroy(struct fibre_arch *a)
 
 void fibre_arch_switch(struct fibre_arch *dest, struct fibre_arch *src)
 {
-	int ret = swapcontext(&src->ctx, &dest->ctx);
+	FUNUSED int ret = swapcontext(&src->ctx, &dest->ctx);
 	FCHECK(!ret);
 }

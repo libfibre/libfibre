@@ -11,8 +11,10 @@
 #ifdef FIBRE_RUNTIME_CHECK
 #include <assert.h>
 #define FCHECK(cond) assert(cond)
+#define FUNUSED
 #else
 #define FCHECK(cond)
+#define FUNUSED __attribute__((unused))
 #endif
 
 /* The platform-specific context-switching support will provide this
