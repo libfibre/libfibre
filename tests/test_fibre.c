@@ -7,10 +7,10 @@
 
 #ifdef DO_TRACE
 #define TRACE(a)	printf a
-#define TEST_FIBER_TARGET 300
+#define TEST_FIBRE_TARGET 300
 #else
 #define TRACE(a)	do { ; } while (0)
-#define TEST_FIBER_TARGET 10000000
+#define TEST_FIBRE_TARGET 10000000
 #endif
 
 struct testfoo {
@@ -45,7 +45,7 @@ static void f2(void *__foo)
 int main(int argc, char *argv[])
 {
 	struct testfoo foo = {
-		.tgt = TEST_FIBER_TARGET,
+		.tgt = TEST_FIBRE_TARGET,
 		.c = 0
 	};
 	struct fibre_selector *se;
