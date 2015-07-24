@@ -82,7 +82,7 @@ int fibre_recreate(struct fibre *f, void (*fn)(void *), void *d)
 {
 	int ret;
 	FCHECK(f->flags & FIBRE_FLAGS_COMPLETED);
-	fibre_arch_destroy(&f->arch);
+	fibre_arch_destroy(f->arch);
 	f->flags = 0;
 	ret = fibre_arch_create(&f->arch, fibre_bootstrap);
 	if (ret)
@@ -96,7 +96,7 @@ void fibre_destroy(struct fibre *f)
 {
 	FCHECK(!f->flags || (f->flags & FIBRE_FLAGS_COMPLETED));
 	if (f->flags & FIBRE_FLAGS_COMPLETED)
-		fibre_arch_destroy(&f->arch);
+		fibre_arch_destroy(f->arch);
 	free(f);
 }
 

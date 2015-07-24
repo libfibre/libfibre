@@ -3,14 +3,14 @@
 #include <stdio.h>
 #include <assert.h>
 
-#define DO_TRACE
+#undef DO_TRACE
 
 #ifdef DO_TRACE
 #define TRACE(a)	printf a
 #define TEST_FIBRE_TARGET 300
 #else
 #define TRACE(a)	do { ; } while (0)
-#define TEST_FIBRE_TARGET 10000000
+#define TEST_FIBRE_TARGET 100000000
 #endif
 
 struct testfoo {

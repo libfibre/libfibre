@@ -1,7 +1,7 @@
 #include "private.h"
 
 struct vd {
-	struct fibre_arch origin;
+	struct fibre_arch *origin;
 	struct fibre *current;
 };
 
@@ -44,14 +44,14 @@ static void so_schedule(void *__vd, struct fibre *f)
 	struct fibre_arch *s, *d;
 	FCHECK(vd->current || f);
 	if (vd->current)
-		s = &vd->current->arch;
+		s = vd->current->arch;
 	else
-		s = &vd->origin;
+		s = vd->origin;
 	if (f) {
-		d = &f->arch;
+		d = f->arch;
 		vd->current = f;
 	} else {
-		d = &vd->origin;
+		d = vd->origin;
 		vd->current = NULL;
 	}
 	fibre_arch_switch(d, s);

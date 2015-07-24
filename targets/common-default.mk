@@ -119,7 +119,7 @@ define gen_bin
   $(eval OBJS := $(foreach foo,$(BIN_$(1)_SOURCE),$($(foo)_out)))
 $($(1)_out): $(OBJS) $(foreach m,$($(1)_make_dirs),$(TOP_SRC)/$(m)/Makefile.am) $(foreach lib,$($(1)_LDADD),$($(lib)_out)) | $(OUT_BIN)
 	$$(Q)echo " [LINK] $(1)"
-	$$(Q)$(LINK) $(LINKFLAGS) $(OBJS) $(foreach lib,$($(1)_LDADD),$($(lib)_out)) -o $$@
+	$$(Q)$(LINK) $(LINKFLAGS) $(OBJS) $(foreach lib,$($(1)_LDADD),$($(lib)_out)) $($(1)_LINKFLAGS) $(foreach lib,$($(1)_LDADD),$($(lib)_LINKFLAGS)) -o $$@
   $(foreach foo,$(BIN_$(1)_SOURCE),$(eval $(call gen_bin_source,$(foo))))
 endef
 
