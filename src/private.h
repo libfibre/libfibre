@@ -6,6 +6,7 @@
 #include <fibre.h>
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <errno.h>
 
 #ifdef FIBRE_RUNTIME_CHECK
@@ -17,36 +18,23 @@
 #define FUNUSED __attribute__((unused))
 #endif
 
-/* The platform-specific context-switching support will provide this
- * per-fibre struct. */
+/* The arch-<whatever> implementations will define this; */
 struct fibre_arch;
 
-#if FIBRE_ARCH == ucontext
-#include "arch-ucontext.h"
-#else
-#error "Unknown FIBRE_ARCH"
-#endif
-
-/* That platform-specific support will also provide the following hooks;
- *
- *   int fibre_arch_init(void);
- *   void fibre_arch_finish(void);
- *   int fibre_arch_origin(struct fibre_arch *);
- *   int fibre_arch_create(struct fibre_arch *, void (*fn)(void));
- *   void fibre_arch_destroy(struct fibre_arch *);
- *   void fibre_arch_switch(struct fibre_arch *dest, struct fibre_arch *src);
- *
- * These are commented rather than predeclared, because we want to allow
- * versions that are entirely inlined. So if an implementation uses
- * non-inline versions then they should predeclare those hooks in the
- * header. */
+/* That platform-specific support will also provide the following hooks; */
+int fibre_arch_init(void);
+void fibre_arch_finish(void);
+int fibre_arch_origin(struct fibre_arch **);
+int fibre_arch_create(struct fibre_arch **, void (*fn)(void));
+void fibre_arch_destroy(struct fibre_arch *);
+void fibre_arch_switch(struct fibre_arch *dest, struct fibre_arch *src);
 
 /* The fibre structure;
  *  arch: the platform-specific meat.
  *  flags: FIBRE_FLAGS_* bitmask.
  */
 struct fibre {
-	struct fibre_arch arch;
+	struct fibre_arch *arch;
 	unsigned int flags;
 	void (*fn)(void *);
 	void *fn_arg;
