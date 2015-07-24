@@ -4,7 +4,13 @@ CFLAGS += -Wshadow -Wstrict-prototypes -Wwrite-strings -Wdeclaration-after-state
 AR := ar
 ARFLAGS := rcs
 
-FIBRE_ARCH := ucontext
+ifndef FIBRE_ARCH
+$(error FIBRE_ARCH needs to be defined; e.g. ucontext, setjmp, x86)
+endif
+
+#FIBRE_ARCH := ucontext
+#FIBRE_ARCH := setjmp
+#FIBRE_ARCH := x86
 
 # Slurp in the standard routines for parsing Makefile content and
 # generating dependencies

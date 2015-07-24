@@ -5,7 +5,7 @@ CFLAGS += -DFIBRE_RUNTIME_CHECK
 AR := ar
 ARFLAGS := rcs
 
-FIBRE_ARCH := ucontext
+FIBRE_ARCH ?= ucontext
 
 # Slurp in the standard routines for parsing Makefile content and
 # generating dependencies
