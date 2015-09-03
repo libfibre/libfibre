@@ -46,6 +46,13 @@
 
 //#define TRACE_ME
 
+#ifdef TRACE_ME
+#define DEFAULT_FIBRES 4
+#define DEFAULT_LOOPS 5
+#else
+#define DEFAULT_FIBRES 100
+#define DEFAULT_LOOPS 1000000
+#endif
 
 /* Type-safety */
 #define MALLOC(t)    (t *)malloc(sizeof(t))
@@ -286,37 +293,47 @@ do { \
 		return -1; \
 	} \
 } while (0)
+static void usage(int ecode)
+{
+	fprintf(stderr, "Usage: bench [options]\n");
+	fprintf(stderr, "  -f/--fibres <num>  = number of fibres, def=%d\n",
+			DEFAULT_FIBRES);
+	fprintf(stderr, "  -l/--loops <num>   = number of loops, def=%d\n",
+			DEFAULT_LOOPS);
+	fprintf(stderr, "  -h/-?/--help       = display this message\n");
+	exit(ecode);
+}
 int main(int argc, char *argv[])
 {
 	struct rusage before, after;
 	int res, is_straw = 0;
-	unsigned long num_fibres, num_loops, num_switch;
-	unsigned long utime, stime;
+	unsigned long num_fibres = DEFAULT_FIBRES;
+	unsigned long num_loops = DEFAULT_LOOPS;
+	unsigned long num_switch, utime, stime;
 	double persec;
 	const char *s;
-
-#ifdef TRACE_ME
-	num_fibres = 4;
-	num_loops = 5;
-#else
-	num_fibres = 100;
-	num_loops = 1000000;
-#endif
 
 	/* TODO: getopt this */
 	while ((s = ARG_INC())) {
 		if (!strcmp(s, "-f") || !strcmp(s, "--fibres")) {
 			NEED_ARG(s);
 			num_fibres = atoi(s);
-		} else if (!strcmp(s, "-l") || !strcmp(s, "--loops")) {
+			continue;
+		}
+		if (!strcmp(s, "-l") || !strcmp(s, "--loops")) {
 			NEED_ARG(s);
 			num_loops = atoi(s);
-		} else if (!strcmp(s, "-s") || !strcmp(s, "--straw")) {
-			is_straw = 1;
-		} else {
-			fprintf(stderr, "Unrecognised option: %s\n", s);
-			return -1;
+			continue;
 		}
+		if (!strcmp(s, "-s") || !strcmp(s, "--straw")) {
+			is_straw = 1;
+			continue;
+		}
+		if (strcmp(s, "-h") && strcmp(s, "-?") && strcmp(s, "--help")) {
+			fprintf(stderr, "Unrecognised option: %s\n", s);
+			usage(-1);
+		}
+		usage(0);
 	}
 
 	if (is_straw)
