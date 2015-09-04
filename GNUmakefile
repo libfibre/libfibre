@@ -48,6 +48,7 @@ define parse_dir
   $(eval lib_LIBRARIES := )
   $(eval bin_BINARIES := )
   $(eval SUBDIRS := )
+  $(eval THISDIR := $(TOP_SRC)/$(1))
   $(eval include $(TOP_SRC)/$(1)/Makefile.am)
   $(foreach L,$(lib_LIBRARIES),$(eval $(call parse_lib,$(1),$(2),$(L))))
   $(foreach B,$(bin_BINARIES),$(eval $(call parse_bin,$(1),$(2),$(B))))
