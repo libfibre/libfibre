@@ -92,7 +92,7 @@ define gen_lib_source
 $($(1)_out): $(TOP_SRC)/$($(1)_dir)/$($(1)_src) $(TOP_SRC)/$($(1)_dir)/Makefile.am | $(OUT_OBJ)
 	$$(Q)echo " [CC] $($(1)_lib):$($(1)_dir)/$($(1)_src)"
 	$$(Q)touch $($(1)_dep)
-	$$(Q)$(CC) -MMD -MP -MF$($(1)_dep) $(CFLAGS) -c $$< -o $$@
+	$$(Q)$(CC) -MMD -MP -MF$($(1)_dep) $(CFLAGS) $($($(1)_lib)_CFLAGS) -c $$< -o $$@
 endef
 
 # $(1) = symbol name for object foo (dirid_binname_source)
@@ -101,7 +101,7 @@ define gen_bin_source
 $($(1)_out): $(TOP_SRC)/$($(1)_dir)/$($(1)_src) $(TOP_SRC)/$($(1)_dir)/Makefile.am | $(OUT_OBJ)
 	$$(Q)echo " [CC] $($(1)_bin):$($(1)_dir)/$($(1)_src)"
 	$$(Q)touch $($(1)_dep)
-	$$(Q)$(CC) -MMD -MP -MF$($(1)_dep) $(CFLAGS) -c $$< -o $$@
+	$$(Q)$(CC) -MMD -MP -MF$($(1)_dep) $(CFLAGS) $($($(1)_bin)_CFLAGS) -c $$< -o $$@
 endef
 
 # $(1) = name of library
