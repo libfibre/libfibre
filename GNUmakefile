@@ -108,7 +108,7 @@ define debug_lib_foo
 endef
 define debug_lib
   echo "Library: $(1)";
-  $(foreach x,$(LIB_$(1)_SOURCE),$(call debug_lib_foo,$(x)))
+  $(foreach x,$(SOURCE_$(1)),$(call debug_lib_foo,$(x)))
 endef
 
 debug_lib:
@@ -122,7 +122,7 @@ define debug_bin_ldadd
 endef
 define debug_bin
   echo "Executable: $(1)";
-  $(foreach x,$(BIN_$(1)_SOURCE),$(call debug_bin_foo,$(x)))
+  $(foreach x,$(SOURCE_$(1)),$(call debug_bin_foo,$(x)))
   $(foreach lib,$($(1)_LDADD),$(call debug_bin_ldadd,$(lib)))
 endef
 
