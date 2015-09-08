@@ -14,7 +14,7 @@ define parse_lib_source
   $(eval $(FOO)_lib := $(3))
   $(eval $(FOO)_src := $(4))
   $(eval $(FOO)_out := $(OUT_OBJ)/$(patsubst %.c,%.o,$(FOO)))
-  $(eval $(FOO)_dep := $$(patsubst %.o,%.d,$($(FOO)_out)))
+  $(eval $(FOO)_dep := $(patsubst %.o,%.d,$($(FOO)_out)))
   $(eval OUTS_OBJ += $(filter-out $(OUTS_OBJ),$($(FOO)_out)))
   $(eval OUTS_DEP += $(filter-out $(OUTS_DEP),$($(FOO)_dep)))
 endef
@@ -31,7 +31,7 @@ define parse_bin_source
   $(eval $(FOO)_bin := $(3))
   $(eval $(FOO)_src := $(4))
   $(eval $(FOO)_out := $(OUT_OBJ)/$(patsubst %.c,%.o,$(FOO)))
-  $(eval $(FOO)_dep := $$(patsubst %.o,%.d,$($(FOO)_out)))
+  $(eval $(FOO)_dep := $(patsubst %.o,%.d,$($(FOO)_out)))
   $(eval OUTS_OBJ += $(filter-out $(OUTS_OBJ),$($(FOO)_out)))
   $(eval OUTS_DEP += $(filter-out $(OUTS_DEP),$($(FOO)_dep)))
 endef
