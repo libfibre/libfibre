@@ -39,6 +39,10 @@ RMDIR ?= $(RM) -d
 LINK ?= $(CC)
 CFLAGS += -I$(TOP_SRC)/include
 
+#############################################################
+# Utility function missing from Make. Reverse a list of items
+reverse = $(if $(wordlist 2,2,$(1)),$(call reverse,$(wordlist 2,$(words $(1)),$(1))) $(firstword $(1)),$(1))
+
 ########################################################
 # Parse the per-directory Makefile.am files, recursively
 
@@ -68,7 +72,7 @@ build: $(OUTS)
 
 clean:
 	$(Q)$(RM) $(OUTS) $(OUTS_OBJ) $(OUTS_DEP)
-	$(Q)$(RMDIR) $(OUT_DIRS)
+	$(Q)$(RMDIR) $(call reverse,$(OUT_DIRS))
 	$(Q)$(RMDIR) $(TOP_OUT)
 
 install: $(foreach i,$(INSTALLS),$(i)_inst)
