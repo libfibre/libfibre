@@ -103,27 +103,47 @@ endef
 debug_install:
 	@$(foreach i,$(INSTALLS),$(call debug_inst,$(i)))
 
-define debug_lib_foo
-  echo "    source: $($(1)_src) (dirid: $($(1)_dirid))";
+define debug_src_foo
+  echo "    source: $($(1)_src)";
+  echo "       dir: $($(1)_dir)";
+  echo "       dirid: $($(1)_dirid)";
+  echo "       title: $($(1)_title)";
+  echo "       src: $($(1)_src)";
+  echo "       out: $($(1)_out)";
+  echo "       dep: $($(1)_dep)";
+  echo "       path: $($(1)_path)";
 endef
+
 define debug_lib
   echo "Library: $(1)";
-  $(foreach x,$(SOURCE_$(1)),$(call debug_lib_foo,$(x)))
+  echo "  name: $($(1)_name)";
+  echo "  out: $($(1)_out)";
+  echo "  type: $($(1)_type)";
+  echo "  make_dirs: $($(1)_make_dirs)";
+  echo "  install: $($(1)_install)";
+  echo "  inst_path: $($(1)_inst_path)";
+  echo "  inst_flags: $($(1)_inst_flags)";
+  $(foreach x,$(SOURCE_$(1)),$(call debug_src_foo,$(x)))
 endef
 
 debug_lib:
 	@$(foreach i,$(LIBS),$(call debug_lib,$(i)))
 
-define debug_bin_foo
-  echo "    source: $($(1)_src) (dirid: $($(1)_dirid))";
-endef
 define debug_bin_ldadd
   echo "     ldadd: $(1) ($($(1)_out))";
 endef
+
 define debug_bin
   echo "Executable: $(1)";
-  $(foreach x,$(SOURCE_$(1)),$(call debug_bin_foo,$(x)))
+  echo "  name: $($(1)_name)";
+  echo "  out: $($(1)_out)";
+  echo "  type: $($(1)_type)";
+  echo "  make_dirs: $($(1)_make_dirs)";
+  echo "  install: $($(1)_install)";
+  echo "  inst_path: $($(1)_inst_path)";
+  echo "  inst_flags: $($(1)_inst_flags)";
   $(foreach lib,$($(1)_LDADD),$(call debug_bin_ldadd,$(lib)))
+  $(foreach x,$(SOURCE_$(1)),$(call debug_src_foo,$(x)))
 endef
 
 debug_bin:
