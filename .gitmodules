@@ -1,0 +1,4 @@
+[submodule "openssl"]
+	path = openssl
+	url = git@github.com:libfibre/openssl.git
+	branch = fibre-build
