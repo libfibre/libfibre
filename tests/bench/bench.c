@@ -300,6 +300,7 @@ static void usage(int ecode)
 			DEFAULT_FIBRES);
 	fprintf(stderr, "  -l/--loops <num>   = number of loops, def=%d\n",
 			DEFAULT_LOOPS);
+	fprintf(stderr, "  -s/--straw         = run strawman comparison\n");
 	fprintf(stderr, "  -h/-?/--help       = display this message\n");
 	exit(ecode);
 }
