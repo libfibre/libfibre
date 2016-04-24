@@ -1,7 +1,7 @@
 #include "private.h"
 
 struct vd {
-	struct fibre_arch *origin;
+	struct fibre_arch origin;
 	struct fibre *current;
 	struct fibre *(*cb)(void *);
 	void *cb_arg;
@@ -47,20 +47,20 @@ static void ss_schedule(void *__vd, struct fibre *f)
 	struct fibre_arch *s, *d;
 	FCHECK(vd->allow_explicit || !f);
 	if (vd->current)
-		s = vd->current->arch;
+		s = &vd->current->arch;
 	else
-		s = vd->origin;
+		s = &vd->origin;
 	if (!f)
 		f = vd->cb(vd->cb_arg);
 	if (f) {
-		d = f->arch;
+		d = &f->arch;
 		vd->current = f;
 	} else {
 		if (!vd->current)
 			/* We're being asked to switch to the origin, but we're
 			 * already the origin... */
 			return;
-		d = vd->origin;
+		d = &vd->origin;
 		vd->current = NULL;
 	}
 	fibre_arch_switch(d, s);

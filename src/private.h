@@ -21,20 +21,28 @@
 /* The arch-<whatever> implementations will define this; */
 struct fibre_arch;
 
-/* That platform-specific support will also provide the following hooks; */
+/* That platform-specific support in fibre_arch.h will provide the following
+ * hooks; NB: we are inlining the fibre_arch struct definition and these hooks,
+ * because it helps performance, therefore we can't actually predeclare these.
+ * But it's useful to have the prototypes. these are commented out */
+#if 0
 int fibre_arch_init(void);
 void fibre_arch_finish(void);
-int fibre_arch_origin(struct fibre_arch **);
-int fibre_arch_create(struct fibre_arch **, void (*fn)(void));
+int fibre_arch_origin(struct fibre_arch *);
+int fibre_arch_create(struct fibre_arch *, void (*fn)(void));
 void fibre_arch_destroy(struct fibre_arch *);
 void fibre_arch_switch(struct fibre_arch *dest, struct fibre_arch *src);
+#endif
+/* This file is auto-generated into the output directory from the appropriate
+ * src/arch-<foo>.h, where <foo>=$(FIBRE_ARCH). */
+#include <fibre_arch.h>
 
 /* The fibre structure;
  *  arch: the platform-specific meat.
  *  flags: FIBRE_FLAGS_* bitmask.
  */
 struct fibre {
-	struct fibre_arch *arch;
+	struct fibre_arch arch;
 	unsigned int flags;
 	void (*fn)(void *);
 	void *fn_arg;

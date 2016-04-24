@@ -1,5 +1,4 @@
 #include <assert.h>
-#include "private.h"
 
 /*******************
  * FULL DISCLOSURE *
@@ -16,8 +15,12 @@
  * tarball, cropped to leave only the lowest-level ASM stuff.
  *
  * Actually, the excerpt is not quite verbatim. To avoid;
- * "warning: declaration of ‘fiber’ shadows a global declaration [-Wshadow]"
- * I changed the typedef from 'fiber' to '_fiber'.
+ *    "warning: declaration of ‘fiber’ shadows a global declaration [-Wshadow]"
+ *    I changed the typedef from 'fiber' to '_fiber'.
+ * And to allow this code to be a header and multiply-included, we #ifdef
+ * the static declarations using IN_FIBRE_C.
+ * And to allow _that_, we change "create_stack" to not be static, and to
+ * give it better name-spacing, like fibre_arch_create_stack.
  */
 
 /*****************/
@@ -36,8 +39,10 @@ typedef struct
 
 /* Prototype for the assembly function to switch processes. */
 extern int asm_switch(_fiber* next, _fiber* current, int return_value);
-static void create_stack(_fiber* fiber, int stack_size, void (*fptr)(void));
+void fibre_arch_create_stack(_fiber* fiber, int stack_size, void (*fptr)(void));
 extern void* asm_call_fiber_exit;
+
+#ifdef IN_FIBRE_C
 
 #ifdef __APPLE__
 #define ASM_PREFIX "_"
@@ -55,7 +60,7 @@ ASM_PREFIX "asm_call_fiber_exit:\n"
 /*"\t.type asm_call_fiber_exit, @function\n"*/
 "\tcall " ASM_PREFIX "fiber_exit\n");
 
-static void create_stack(_fiber* fiber, int stack_size, void (*fptr)(void)) {
+void fibre_arch_create_stack(_fiber* fiber, int stack_size, void (*fptr)(void)) {
 	int i;
 #ifdef __x86_64
 	/* x86-64: rbx, rbp, r12, r13, r14, r15 */
@@ -147,6 +152,8 @@ ASM_PREFIX "asm_switch:\n"
 "\tret\n");
 #endif
 
+#endif
+
 /***************/
 /* END EXCERPT */
 /***************/
@@ -157,59 +164,51 @@ ASM_PREFIX "asm_switch:\n"
 
 /* This hook is needed from the above code, but it should never be executed in
  * our model, so we craft it appropriately. */
+#ifdef IN_FIBRE_C
 void fiber_exit(void)
 {
 	fprintf(stderr, "Critical: 'fiber_exit' hook called?\n");
 	abort();
 }
+#endif
 
 struct fibre_arch {
 	_fiber ctx;
 	int is_origin;
 };
 
-int fibre_arch_init(void)
+static inline int fibre_arch_init(void)
 {
 	return 0;
 }
 
-void fibre_arch_finish(void)
+static inline void fibre_arch_finish(void)
 {
 }
 
-int fibre_arch_origin(struct fibre_arch **aa)
+static inline int fibre_arch_origin(struct fibre_arch *a)
 {
-	struct fibre_arch *a = malloc(sizeof(struct fibre_arch));
-	if (!a)
-		return -ENOMEM;
 	a->is_origin = 1;
-	*aa = a;
 	return 0;
 }
 
-int fibre_arch_create(struct fibre_arch **aa, void (*fn)(void))
+static inline int fibre_arch_create(struct fibre_arch *a, void (*fn)(void))
 {
-	struct fibre_arch *a = malloc(sizeof(struct fibre_arch));
-	if (!a)
-		return -ENOMEM;
 	a->is_origin = 0;
-	create_stack(&a->ctx, FIBRE_STACK_SIZE, fn);
-	if (!a->ctx.stack_bottom) {
-		free(a);
+	fibre_arch_create_stack(&a->ctx, FIBRE_STACK_SIZE, fn);
+	if (!a->ctx.stack_bottom)
 		return -ENOMEM;
-	}
-	*aa = a;
 	return 0;
 }
 
-void fibre_arch_destroy(struct fibre_arch *a)
+static inline void fibre_arch_destroy(struct fibre_arch *a)
 {
 	if (!a->is_origin)
 		free(a->ctx.stack_bottom);
-	free(a);
 }
 
-void fibre_arch_switch(struct fibre_arch *dest, struct fibre_arch *src)
+static inline void fibre_arch_switch(struct fibre_arch *dest,
+				     struct fibre_arch *src)
 {
 	asm_switch(&dest->ctx, &src->ctx, 0);
 }
