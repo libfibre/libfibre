@@ -34,7 +34,7 @@ int fibre_create(struct fibre **, void (*fn)(void *), void *);
  * calling fibre_destroy() and then fibre_create(), but saves on memory
  * (re)allocation). */
 int fibre_recreate(struct fibre *, void (*fn)(void *), void *);
-/* Destroy a function, should only occur on a fibre that was never invoked or
+/* Destroy a fibre, should only occur on a fibre that was never invoked or
  * that has completed. */
 void fibre_destroy(struct fibre *);
 
