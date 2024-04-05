@@ -1,5 +1,7 @@
 TOP_SRC := $(shell pwd)
 
+-include $(TOP_SRC)/preGNUmakefile
+
 TARGET ?= default-gcc
 TARGET_FILE := targets/$(TARGET).mk
 
