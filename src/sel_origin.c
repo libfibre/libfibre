@@ -9,6 +9,7 @@ static void so_destroy(void *__vd)
 {
 	FUNUSED struct vd *vd = __vd;
 	FCHECK(!vd->current);
+	free(vd);
 }
 
 static int so_post_push(void *__vd)
@@ -24,6 +25,7 @@ static int so_pre_pop(void *__vd)
 	struct vd *vd = __vd;
 	if (vd->current)
 		return -EBUSY;
+	fibre_arch_destroy(vd->origin);
 	return 0;
 }
 
