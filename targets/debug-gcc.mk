@@ -1,5 +1,5 @@
 CFLAGS := -pthread -ggdb3 -Wall
-CFLAGS += -Wshadow -Wstrict-prototypes -Wwrite-strings -Wdeclaration-after-statement
+CFLAGS += -Wshadow -Wstrict-prototypes -Wwrite-strings
 CFLAGS += -DFIBRE_RUNTIME_CHECK
 
 AR := ar

@@ -1,5 +1,5 @@
 CFLAGS := -pthread -O2 -Wall
-CFLAGS += -Wshadow -Wstrict-prototypes -Wwrite-strings -Wdeclaration-after-statement
+CFLAGS += -Wshadow -Wstrict-prototypes -Wwrite-strings
 
 AR := ar
 ARFLAGS := rcs
