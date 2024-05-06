@@ -1,4 +1,4 @@
-CFLAGS := -pthread -ggdb3 -Wall
+CFLAGS := -pthread -ggdb3 -Wall -Werror
 CFLAGS += -Wshadow -Wstrict-prototypes -Wwrite-strings
 CFLAGS += -DFIBRE_RUNTIME_CHECK
 
